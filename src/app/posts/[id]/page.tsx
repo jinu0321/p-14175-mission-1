@@ -65,6 +65,12 @@ export default function Page() {
       }),
     }).then((data) => {
       alert(data.msg);
+
+      contentTextarea.value = "";
+
+      if (postComments == null) return;
+
+      setPostComments([...postComments, data.data]);
     });
   };
 
