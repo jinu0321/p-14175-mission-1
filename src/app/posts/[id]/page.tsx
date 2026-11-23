@@ -57,6 +57,15 @@ export default function Page() {
       contentTextarea.focus();
       return;
     }
+
+    apiFetch(`/api/v1/posts/${id}/comments`, {
+      method: "POST",
+      body: JSON.stringify({
+        content: contentTextarea.value,
+      }),
+    }).then((data) => {
+      alert(data.msg);
+    });
   };
 
   useEffect(() => {
