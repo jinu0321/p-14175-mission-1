@@ -2,14 +2,26 @@
 
 import { apiFetch } from "@/lib/backend/client";
 import type { PostDto } from "@/type/post";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Page() {
+  const router = useRouter();
+
   const { id: idStr } = useParams<{ id: string }>();
   const id = Number(idStr);
 
   const [post, setPost] = useState<PostDto | null>(null);
+
+  const deletePost = (id: number) => {
+    apiFetch(`/api/v1/posts/${id}`, {
+      method: "DELETE",
+    }).then((data) => {
+      alert(data.msg);
+
+      router.replace("/posts");
+    });
+  };
 
   useEffect(() => {
     apiFetch(`/api/v1/posts/${id}`).then(setPost);
@@ -25,6 +37,15 @@ export default function Page() {
       <div>제목 : {post.title}</div>
       <div>작성일 : {post.createDate}</div>
       <div style={{ whiteSpace: "pre-line" }}>{post.content}</div>
+
+      <div className="flex gap-2">
+        <button
+          className="p-2 rounded border cursor-pointer"
+          onClick={() => deletePost(post.id)}
+        >
+          삭제
+        </button>
+      </div>
     </>
   );
 }
